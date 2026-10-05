@@ -1,146 +1,67 @@
 # windows-ux-guide
 
 Microsoft の **Windows User Experience Interaction Guidelines**（Windows 7 / Vista 版 UX Guide）を
-エージェント スキルとして再構成した `windows-ux-guide` を、**`npx` ひとつで配布・導入できる**
-ようにしたパッケージです。同じリポジトリに、ガイドの適用例である **Aero UI デモ** を同梱しています。
+エージェント スキルとして再構成したものです。Windows デスクトップ UI の設計・実装・レビュー時に、
+エージェントへ読み込ませて使います。
 
-- スキル本体: [`skills/windows-ux-guide/`](skills/windows-ux-guide/SKILL.md)
-  （`SKILL.md` + `references/*.md` + `agents/openai.yaml`）
-- デモ: [`demo/`](demo/index.html)（HTML/CSS/JS のみ。ビルド不要）
+- スキル本体: [`skills/windows-ux-guide/SKILL.md`](skills/windows-ux-guide/SKILL.md)
+- 参照資料: [`skills/windows-ux-guide/references/`](skills/windows-ux-guide/references/)（14 ファイル）
+- エージェント定義: [`skills/windows-ux-guide/agents/openai.yaml`](skills/windows-ux-guide/agents/openai.yaml)
 
 ## 必要環境
 
-- Node.js **18 以上**（依存パッケージはありません。`npx` が入っていれば追加インストール不要）
+実行環境は不要です（Markdown のみ）。エージェントがスキルを探索するディレクトリへ
+フォルダーを置くだけで使えます。
 
 ## 使い方
 
+`skills/windows-ux-guide/` を、お使いのエージェントのスキル ディレクトリへコピーします。
+
 ```bash
-# 1. スキルをエージェントの探索パスへ配置する（既定コマンド）
-npx windows-ux-guide install
+# Codex / ChatGPT デスクトップ（プロジェクト直下）
+mkdir -p .agents/skills && cp -r skills/windows-ux-guide .agents/skills/
 
-# 2. Aero UI デモをローカルで配信する
-npx windows-ux-guide demo
+# Claude Code（プロジェクト直下）
+mkdir -p .claude/skills && cp -r skills/windows-ux-guide .claude/skills/
 
-# 3. パッケージ内容と配置先の候補を確認する
-npx windows-ux-guide list
+# ホーム配下（全プロジェクト共通）
+mkdir -p ~/.agents/skills && cp -r skills/windows-ux-guide ~/.agents/skills/
 ```
 
-`npx windows-ux-guide` のように引数なしで実行した場合も `install` として動作します。
+配置後は `$windows-ux-guide` として呼び出せます（説明文が一致すれば自動でも起動します）。
+`.agents/skills/` や `.claude/skills/` は各自の環境で生成されるものなので `.gitignore` で除外しています。
 
-### install
+## 参照資料の一覧
 
-| オプション | 説明 |
+| ファイル | 内容 |
 | --- | --- |
-| `-t, --target <name>` | 配置先。`agents`（既定）/ `codex` / `claude` / `all` / `auto` |
-| `--user` | プロジェクトではなくホーム配下へ配置する |
-| `-d, --dir <path>` | スキル群の親ディレクトリを直接指定する |
-| `-n, --name <dir>` | 配置先のフォルダー名（既定: `windows-ux-guide`） |
-| `-f, --force` | 既存の配置先を上書きする |
-| `--prune` | `--force` 時に配置先の余分なファイルも削除する |
-| `--symlink` | コピーせずシンボリック リンクを張る（開発用） |
-| `--dry-run` | 書き込まずに実行内容だけを表示する |
-| `--json` | 結果を JSON で出力する |
+| `references/design-principles.md` | 設計原則（14 の短縮版 / 19 の詳細版）と「Top Guidelines Violations」チェックリスト |
+| `references/controls.md` | コントロールの選択と構成（ボタン、テキスト ボックス、リスト、プログレス、ツールヒント等） |
+| `references/commands.md` | メニュー、ツール バー、リボン、コマンドの整理 |
+| `references/text.md` | UI テキスト、スタイル、トーン、大文字化、ラベル、説明文 |
+| `references/messages.md` | エラー、警告、確認、通知メッセージ |
+| `references/interaction.md` | キーボード、マウス、タッチ、ペン、アクセシビリティ |
+| `references/windows.md` | ウィンドウ管理、フレーム、ダイアログ ボックス、ウィザード、プロパティ シート |
+| `references/visuals.md` | レイアウト、フォント、色、アイコン、標準アイコン、アニメーション、サウンド |
+| `references/experiences.md` | ブランディング、セットアップ、初回起動、印刷 |
+| `references/windows-environment.md` | デスクトップ、スタート メニュー、タスク バー、通知領域、コントロール パネル、ヘルプ、UAC |
+| `references/checklists.md` | 画面の種類ごとの事前チェック / レビュー用チェックリスト |
+| `references/ja-overview.md` | 日本語概要版の要点（Meiryo、タスク バー、リボン、タッチ） |
+| `references/modern-porting.md` | モダン環境への移植: フォント スタック、rem スケーリング、1px 質感、Aero glass の合成（§3.1–3.2）、4:3 / 5:4 / 16:10 |
+| `references/sources.md` | 出典と、抽出テキストの再生成手順 |
 
-配置される探索パス（2025 年時点の規約）:
+## 対象範囲
 
-| 対象 | プロジェクト | ユーザー (`--user`) |
-| --- | --- | --- |
-| Codex / OpenAI（agent skills 標準） | `<repo>/.agents/skills/windows-ux-guide` | `~/.agents/skills/windows-ux-guide` |
-| Claude Code | `<project>/.claude/skills/windows-ux-guide` | `~/.claude/skills/windows-ux-guide` |
-
-- 既に配置済みで内容が同じ場合は「既に最新です」と表示して何もしません。
-- 内容が違う場合は、黙って上書きせずに `--force` を案内します（`--dry-run` で差分だけ確認できます）。
-- 配置後は Claude Code なら `/windows-ux-guide`、Codex / ChatGPT デスクトップなら
-  `$windows-ux-guide` として呼び出せます。説明文が一致すれば自動でも起動します。
-
-```bash
-# 例
-npx windows-ux-guide install -t claude        # Claude Code のプロジェクトへ
-npx windows-ux-guide install --user           # ホーム配下（全プロジェクト共通）
-npx windows-ux-guide install -t all --dry-run # 両方に配置した場合の差分確認
-```
-
-### demo
-
-| オプション | 説明 |
-| --- | --- |
-| `-p, --port <n>` | 待ち受けポート（既定: `8080`。使用中なら自動で `+1`） |
-| `--host <addr>` | 待ち受けアドレス（既定: `127.0.0.1`） |
-| `--no-open` | ブラウザーを自動で開かない |
-
-```bash
-npx windows-ux-guide demo -p 5173
-```
-
-デモは `demo/` を静的配信するだけです。停止は `Ctrl+C`。
-
-## パッケージ構成
-
-```
-package.json          npm メタデータ（bin: windows-ux-guide / wxg）
-bin/cli.mjs           CLI 本体（依存ゼロ・ESM）
-skills/windows-ux-guide/
-  SKILL.md            スキル定義（name / description の frontmatter）
-  references/*.md     ガイド本文（14 ファイル）
-  agents/openai.yaml  ChatGPT デスクトップ / Codex 用の表示メタデータ
-demo/                 Aero UI デモ（index.html + css/ + js/）
-```
-
-`npm publish` では `package.json` の `files` により `bin/`・`skills/`・`demo/`・`README.md`
-のみが公開されます（PDF 資料などは含まれません）。
-
-## ローカルでの動作確認と公開
-
-```bash
-# 開発時の実行（インストール不要）
-node bin/cli.mjs --help
-node bin/cli.mjs install --target claude --dry-run
-node bin/cli.mjs demo --no-open
-npm run demo            # 同上
-
-# パッケージに含まれるファイルの確認と、公開内容の検証
-npm pack --dry-run
-npm publish --dry-run
-```
-
-`npx` での実地検証は、tarball を直接指定するのが確実です。
-
-```bash
-npm pack                      # windows-ux-guide-0.1.0.tgz ができる
-npx ./windows-ux-guide-0.1.0.tgz install --dry-run
-```
-
-`npx` へ渡す tarball は `./` 付きの相対パスにしてください。絶対パス（`/tmp/….tgz`）は
-パッケージではなく実行ファイルと解釈され `Permission denied` になります。
-レジストリへ公開した後は名前だけで実行できます。
-
-```bash
-npx windows-ux-guide install --target claude
-npx windows-ux-guide demo
-```
-
-公開する場合は、先に `package.json` の `version` を上げてから `npm publish` を実行します
-（`publishConfig.access` は `public`）。
-
-## メモ
-
-- 動作確認済み: Node.js v22.14.0 / npm 10.9.2。`npx ./windows-ux-guide-0.1.0.tgz` から
-  `install`（`agents` / `claude` / `all` / `auto`、`--user`、`--dir`、`--name`、`--symlink`、
-  `--force`、`--prune`、`--dry-run`、`--json`）と `demo`（HTTP 配信）を確認しています。
-  配置したスキルは同梱物とバイト単位で一致します（16 ファイル）。
-- ライセンスは **MIT**（`LICENSE`）です。`skills/windows-ux-guide/` の中身は Microsoft の
-  UX Guide 等を**要約・再構成した自作の記述**で、原文は再掲していません。原文の権利は
-  Microsoft に帰属し MIT の対象外です（詳細は `NOTICE`、出典は
-  `skills/windows-ux-guide/references/sources.md`）。
-- `--symlink` は開発用です。`--force` を併用せずに既存の配置先がある場合でも、
-  リンクを張り直します。
-- Windows でシンボリック リンクを作るには開発者モードまたは管理者権限が必要です。
-  通常は既定のコピー配置を使ってください。
+ソースは Windows 7 / Vista（2010 年最終更新）時点のものです。原則の多くは現在も有効ですが、
+表現や例は現在の Microsoft の設計ガイドラインとは一致しません。クラシック デスクトップ /
+Aero 調の UI を対象とし、モダン Windows（Fluent / WinUI、タッチ ファースト、ダーク モード）を
+対象にする場合は差異を明示してください。詳細は `SKILL.md` の Scope note と
+[`references/modern-porting.md`](skills/windows-ux-guide/references/modern-porting.md) にあります。
 
 ## ライセンス
 
-このパッケージ（CLI `bin/cli.mjs`、`demo/`、スキルとして再構成した記述）は
-**MIT License** です。全文は [`LICENSE`](LICENSE) を参照してください。
+このリポジトリの内容（スキルとして再構成した記述）は **MIT License** です。全文は
+[`LICENSE`](LICENSE) を参照してください。
 
 同梱のスキルは Microsoft の *Windows User Experience Interaction Guidelines*
 （Windows 7 / Vista 版）および関連する Microsoft Learn のドキュメントを
@@ -149,6 +70,6 @@ npx windows-ux-guide demo
 出典の対応表は [`skills/windows-ux-guide/references/sources.md`](skills/windows-ux-guide/references/sources.md)
 にあります。
 
-リポジトリ直下の `UXGuide_(Windows_7_Vista).pdf` / `UXGuideJpOverview.pdf` は
-参照用に置いてある Microsoft の原本で、npm パッケージには含まれません
-（`package.json` の `files` で除外）。MIT の対象外なので再配布しないでください。
+リポジトリ直下の `UXGuide_(Windows_7_Vista).pdf` / `UXGuideJpOverview.pdf` は参照用に置いてある
+Microsoft の原本で、リポジトリには含まれません（`.gitignore` で除外）。MIT の対象外なので
+再配布しないでください。

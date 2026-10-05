@@ -226,12 +226,7 @@ UXGuideJpOverview.pdf
 # *.pdf
 
 # ---- ローカル生成物 -------------------------------------------------------
-node_modules/
-npm-debug.log*
-*.tgz
-windows-ux-guide-*.tgz
-
-# install コマンドの配置先（各自の環境で生成されるもの）
+# スキルの配置先（各自の環境で生成されるもの）
 .agents/
 .claude/
 .codex/

@@ -216,3 +216,29 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ---- 元資料（Microsoft の著作物）------------------------------------------
+# ライセンス上リポジトリへ含めない。ローカルの参照用にのみ置く。
+# 詳細は NOTICE を参照。
+UXGuide_(Windows_7_Vista).pdf
+UXGuideJpOverview.pdf
+# 将来追加する原本 PDF も既定で除外する場合:
+# *.pdf
+
+# ---- ローカル生成物 -------------------------------------------------------
+node_modules/
+npm-debug.log*
+*.tgz
+windows-ux-guide-*.tgz
+
+# install コマンドの配置先（各自の環境で生成されるもの）
+.agents/
+.claude/
+.codex/
+
+# ---- OS / エディタ --------------------------------------------------------
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~

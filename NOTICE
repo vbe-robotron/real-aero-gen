@@ -1,0 +1,36 @@
+windows-ux-guide
+Copyright (c) 2026 ノルトバーンホフ
+
+This package is licensed under the MIT License (see LICENSE).
+
+Source material and attribution
+------------------------------
+
+The reference content in skills/windows-ux-guide/ is a paraphrase and summary of:
+
+  * Windows User Experience Interaction Guidelines ("UX Guide") for
+    Windows 7 / Windows Vista, © 2010 Microsoft Corporation
+    (last updated 2010-09-29, 882-page printable form).
+    https://learn.microsoft.com/en-us/windows/win32/uxguide/
+  * Windows ユーザー エクスペリエンス ガイドライン (Japanese overview booklet,
+    52 pages), an excerpt of the online UX Guide.
+    https://learn.microsoft.com/ja-jp/windows/win32/uxguide/
+  * Microsoft Learn Win32 desktop composition documentation (DWM Blur Behind
+    Overview; Custom Window Frame Using DWM), used for the Aero glass rules in
+    references/modern-porting.md.
+
+Those documents and API reference texts remain © Microsoft Corporation, with all
+rights reserved by Microsoft. They are not covered by the MIT License above, and
+are not redistributed with this package. No Microsoft text is reproduced
+verbatim: the skill files are original summaries written for design and code
+review, and references/modern-porting.md contains guidance authored for this
+project.
+
+The PDF files in the repository root (UXGuide_(Windows_7_Vista).pdf and
+UXGuideJpOverview.pdf) are local reference copies of the Microsoft documents.
+They are excluded from the npm package (see the "files" field in package.json)
+and are not covered by the MIT License; do not redistribute them.
+
+Refer to the sources above for the authoritative text, and pin quotes to the
+source documents when precision matters (see
+skills/windows-ux-guide/references/sources.md).

@@ -1,0 +1,183 @@
+/* ==========================================================================
+   tokens.css — windows-ux-guide デモ
+   出典: references/visuals.md, references/modern-porting.md §1-§3, §5
+   Aero ガラスの合成は modern-porting.md §3.1-§3.2 (DWM のぼかし合成)。
+   ・フォントはフォールバック スタックで指定 (OS/商用フォントは名前参照のみ、埋め込みなし)
+   ・寸法はすべて rem。ユーザーのフォント サイズ設定とズームに追従させる
+   ・era の「px の詰まり感」は 1px ストローク + 1px 内側ハイライトだけで再現する
+   ========================================================================== */
+:root {
+  color-scheme: light;
+
+  /* --- フォント スタック (modern-porting.md §1): 日本語優先 --- */
+  --font-ui: "Meiryo UI", Meiryo, "Segoe UI", "Segoe UI Variable Text",
+             Myriad, "Myriad Pro", "Myriad Set Pro",
+             Hind, "Noto Sans", "Noto Sans JP", "Noto Sans CJK JP",
+             system-ui, sans-serif;
+  --font-latin: "Segoe UI", "Segoe UI Variable Text", Meiryo, "Meiryo UI",
+                Myriad, "Myriad Pro", Hind, "Noto Sans", system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", Consolas, "Courier New", monospace;
+
+  /* --- UI スケール (デモ ツールバーで切替) --- */
+  --s: 1;                    /* 1 = era の役割比をそのまま rem 化 */
+  --hairline: 1px;           /* era の 1px。DPR>=2 では 0.5px に細める */
+  --stroke: 1px;
+
+  /* --- タイプ: era の「役割比」を維持 (本文 9pt / メイン命令 12pt = 1.33x) --- */
+  --text-caption: calc(0.75rem * var(--s));
+  --text-body: calc(0.8125rem * var(--s));
+  --text-title: calc(0.875rem * var(--s));
+  --text-lead: calc(1rem * var(--s));
+  --text-main: calc(1.125rem * var(--s));
+  --text-head: calc(1.375rem * var(--s));
+  --lh-body: 1.45;
+  --lh-main: 1.3;
+
+  /* --- 余白: 4px グリッドの era 比率 --- */
+  --u: calc(0.25rem * var(--s));
+  --sp-1: var(--u);
+  --sp-2: calc(var(--u) * 2);
+  --sp-3: calc(var(--u) * 3);
+  --sp-4: calc(var(--u) * 4);
+  --sp-5: calc(var(--u) * 5);
+  --sp-7: calc(var(--u) * 7);
+
+  /* --- コントロール寸法 --- */
+  --ctrl-h: calc(1.4375rem * var(--s));       /* 23px = touchable の最小 */
+  --ctrl-h-touch: calc(2.5rem * var(--s));    /* 40px = touch-enabled */
+  --radius: calc(0.1875rem * var(--s));
+  --radius-lg: calc(0.375rem * var(--s));
+  --menu-w: calc(12rem * var(--s));
+  --taskbar-h: calc(2.5rem * var(--s));
+
+  /* --- era の 1px 質感 (modern-porting.md §3) --- */
+  --edge-hi: inset 0 var(--stroke) 0 rgba(255, 255, 255, .75);
+  --edge-lo: inset 0 calc(-1 * var(--stroke)) 0 rgba(105, 140, 175, .25);
+  --glass-hi: inset 0 var(--stroke) 0 rgba(255, 255, 255, .9);
+
+  /* --- 色 (visuals.md「色の意味」) --- */
+  --win-bg: #f0f0f0;
+  --client-bg: #ffffff;
+  --text: #1a1a1a;
+  --text-soft: #55606a;
+  --text-disabled: #a0a0a0;
+  --text-inverse: #ffffff;
+  --main-blue: #003399;          /* メイン命令 */
+  --line: #d5dbe0;
+  --line-strong: #9aa5ad;
+  --line-dark: #6d7b87;
+
+  /* --- Aero ガラス (DWM の合成) ------------------------------------------
+     DwmExtendFrameIntoClientArea でクライアント領域に広げた枠は、DWM が背後の
+     ウィンドウ/デスクトップをぼかして合成したもの。ここでは backdrop-filter で
+     同じ効果 (ぼかし + 彩度) を出し、色は「ガラス越しの色づき」だけを載せる。
+     ・不透明度を上げると、その瞬間に「不透明なグレーのプラスチック」になる。
+       ガラスらしさは色ではなく --glass-blur が担う。
+     ・ぼかしを持てない環境とハイ コントラスト (.no-glass, .theme-hc) は
+       Vista Basic 相当の不透明な代替値に差し替える。 */
+  --glass-blur: 20px;          /* 背後のぼかし半径 (DWM の合成ぼかしに相当) */
+  --glass-sat: 1.6;            /* ぼかしと同時に彩度を上げる (ガラスの色づき) */
+  --glass-bright: 1.05;
+  --glass-top: rgba(240, 248, 255, .52);   /* アクティブ: 上端は明るく */
+  --glass-mid: rgba(208, 229, 250, .40);
+  --glass-bot: rgba(170, 202, 234, .34);   /* 下端は濃く */
+  --glass-top-inact: rgba(242, 246, 250, .48);  /* 非アクティブは彩度を落とす */
+  --glass-bot-inact: rgba(196, 210, 224, .36);
+  --frame-active: #3c7fb1;
+  --frame-inactive: #a3b0bb;
+  --frame-outer: rgba(0, 0, 0, .38);
+
+  /* タスクバー (Windows 7 スーパーバー) とスタート メニューのガラス */
+  --taskbar-top: rgba(190, 220, 245, .34);
+  --taskbar-mid: rgba(60, 90, 120, .40);
+  --taskbar-bot: rgba(16, 30, 44, .62);
+  --startmenu-bg-top: rgba(242, 247, 252, .74);
+  --startmenu-bg-bot: rgba(224, 236, 248, .68);
+
+  /* キャプション ボタン: ガラスの上に載る半透明の白 (Aero では枠の一部) */
+  --cap-top: rgba(255, 255, 255, .68);
+  --cap-bot: rgba(214, 232, 248, .42);
+  --cap-border: rgba(90, 130, 165, .65);
+  --cap-hover-top: #fdfefe;
+  --cap-hover-bot: #cde8fb;
+  --cap-close-top: #f8b0a4;
+  --cap-close-bot: #d24a35;
+  --cap-close-hover-top: #fbc9c0;
+  --cap-close-hover-bot: #b3230d;
+
+  /* 通常ボタン / 既定 (commit) ボタン */
+  --btn-hi: #f4f4f4;
+  --btn-lo: #e2e5e8;
+  --btn-border: #8e9aa5;
+  --btn-hover-hi: #f4fbff;
+  --btn-hover-lo: #cce9f9;
+  --btn-active-hi: #c2e3f6;
+  --btn-active-lo: #a8cfe8;
+  --cmt-hi: #eef8fe;
+  --cmt-mid: #d3eefc;
+  --cmt-lo: #a5dcf9;
+  --cmt-border: #2c6b97;
+  --cmt-glow: 0 0 calc(0.4rem * var(--s)) rgba(120, 200, 255, .95);
+
+  /* 選択 (list view / テキスト) */
+  --sel-bg: #cce8ff;
+  --sel-border: #99d1ff;
+  --sel-inactive: #e6e6e6;
+
+  /* 状態色 (visuals.md: red=error, yellow=warning, green=ok) */
+  --danger: #b3261e;
+  --danger-bg: #fdecea;
+  --danger-line: #e5a19a;
+  --warn: #9a6a00;
+  --warn-bg: #fff7e0;
+  --warn-line: #e0c073;
+  --ok: #1b6e35;
+  --ok-bg: #eefaf1;
+  --ok-line: #8fcaa2;
+
+  /* 影 (era の硬めの落ち影) */
+  --shadow-win: 0 0 calc(1.1rem * var(--s)) rgba(0, 0, 0, .42), 0 calc(0.2rem * var(--s)) calc(0.5rem * var(--s)) rgba(0, 0, 0, .3);
+  /* DWM は非アクティブのウィンドウに浅い影しか落とさない */
+  --shadow-win-inactive: 0 0 calc(.8rem * var(--s)) rgba(0, 0, 0, .28),
+                         0 calc(.15rem * var(--s)) calc(.35rem * var(--s)) rgba(0, 0, 0, .22);
+  --shadow-pop: 0 calc(0.2rem * var(--s)) calc(0.6rem * var(--s)) rgba(0, 0, 0, .3);
+  --shadow-glow: 0 0 calc(0.9rem * var(--s)) rgba(110, 190, 255, .75);
+
+  /* 重なり順 */
+  --z-icons: 10;
+  --z-wins: 100;
+  --z-veil: 800;
+  --z-modal: 900;
+  --z-taskbar: 1000;
+  --z-start: 1100;
+  --z-balloon: 1200;
+  --z-toast: 1300;
+
+  font-size: 100%;             /* ユーザーのフォント サイズ設定を尊重 */
+}
+
+/* Retina/4K: era の 1px 線は細く見えすぎるので 0.5px に細める (比率は維持) */
+@media (min-resolution: 2dppx) {
+  :root { --hairline: 0.5px; }
+}
+/* --- 透明効果の代替 (Vista Basic 相当): ここだけは不透明なガラスに戻す ---
+   backdrop-filter を持てない環境は app.js が .no-glass を付ける。
+   ハイ コントラスト (.theme-hc) も Windows と同じく透明効果を切る。 */
+.no-glass, .theme-hc {
+  --glass-blur: 0px;
+  --glass-sat: 1;
+  --glass-bright: 1;
+  --glass-top: rgba(238, 246, 253, .95);
+  --glass-mid: rgba(222, 238, 251, .95);
+  --glass-bot: rgba(197, 220, 243, .95);
+  --glass-top-inact: rgba(240, 244, 248, .95);
+  --glass-bot-inact: rgba(206, 216, 226, .95);
+  --cap-top: rgba(255, 255, 255, .92);
+  --cap-bot: rgba(214, 232, 248, .92);
+  --taskbar-top: rgba(190, 220, 245, .90);
+  --taskbar-mid: rgba(60, 90, 120, .92);
+  --taskbar-bot: rgba(18, 32, 46, .97);
+  --startmenu-bg-top: rgba(242, 247, 252, .99);
+  --startmenu-bg-bot: rgba(226, 238, 249, .99);
+}
+/* ==TOKENS-END== */

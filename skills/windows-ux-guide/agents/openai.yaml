@@ -1,0 +1,4 @@
+interface:
+  display_name: Windows UX Guide
+  short_description: Design and review Windows 7/Vista desktop UI per Microsoft's UX Guide
+  default_prompt: Use the Windows UX Guide knowledge in this skill to design, implement, or review a Windows desktop user interface (windows, dialogs, controls, text, messages, interaction, visuals) following Microsoft's official guidelines.
